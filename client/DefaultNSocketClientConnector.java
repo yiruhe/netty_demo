@@ -1,8 +1,9 @@
-package com.netty.client;
+package netty_demo.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import netty_demo.base.ChannelHandlerHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +15,12 @@ public class DefaultNSocketClientConnector extends NettyClientConnector{
 
     private int tryCount=0;
 
-    private List<ChannelHandler> channelHandlers = new ArrayList<>();
+    private ChannelHandlerHolder channelHandlers = null;
 
 
-    public ChannelFuture connect(String host, int port, List<ChannelHandler> channelHandlers) throws InterruptedException {
+    public ChannelFuture connect(String host, int port, ChannelHandlerHolder channelHandlers) throws InterruptedException {
 
-        this.channelHandlers.addAll(channelHandlers);
+        this.channelHandlers = channelHandlers;
 
         return  this.connect(host,port);
     }
@@ -36,17 +37,18 @@ public class DefaultNSocketClientConnector extends NettyClientConnector{
             @Override
             public ChannelHandler[] handlers() {
 
-                channelHandlers.add(0,this);
-
-                /*return new ChannelHandler[]{
-                        this*//*,
-                        //每隔30s的时间触发一次userEventTriggered的方法，并且指定IdleState的状态位是WRITER_IDLE
-                        new IdleStateHandler(2, 0, 0, TimeUnit.SECONDS),
-                        //实现userEventTriggered方法，并在state是WRITER_IDLE的时候发送一个心跳包到sever端，告诉server端我还活着
-                        new ConnectorIdleStateTrigger()*//*
-                };*/
-
-                return channelHandlers.toArray(new ChannelHandler[0]);
+                if(channelHandlers != null){
+                   return channelHandlers.handlers();
+                }else{
+                    return new ChannelHandler[]{
+                            this
+                            //*,
+                            //每隔30s的时间触发一次userEventTriggered的方法，并且指定IdleState的状态位是WRITER_IDLE
+                            // new IdleStateHandler(2, 0, 0, TimeUnit.SECONDS),
+                            //实现userEventTriggered方法，并在state是WRITER_IDLE的时候发送一个心跳包到sever端，告诉server端我还活着
+                            //  new ConnectorIdleStateTrigger()*//*
+                    };
+                }
             }
 
         };
