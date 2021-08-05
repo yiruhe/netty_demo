@@ -38,7 +38,11 @@ public class DefaultNSocketClientConnector extends NettyClientConnector{
             public ChannelHandler[] handlers() {
 
                 if(channelHandlers != null){
-                   return channelHandlers.handlers();
+                    ChannelHandler[] handlers = channelHandlers.handlers();
+                    ChannelHandler[] handlerArr = new ChannelHandler[handlers.length+1];
+                    handlerArr[0]=this;
+                    System.arraycopy(handlers,0,handlerArr,1,handlers.length);
+                    return  handlerArr;
                 }else{
                     return new ChannelHandler[]{
                             this
