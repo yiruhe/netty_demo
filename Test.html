@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <label >限制对象</label>
+        <select name=""  @change="selectFn($event)">
+            <option :value="item.val" v-for="item in limitObjList">{{item.name}}</option>
+        </select>
+    </div>
+    <div v-show="isShowLimitUser">
+        <label >用户限制</label>
+        <select name=""  >
+            <option :value="item.val" v-for="item in limitObjList">{{item.name}}</option>
+        </select>
+    </div>
+    <div>
+        <label >限制类型</label>
+        <select name=""  @change="selectFn($event)">
+            <option :value="item.val" v-for="item in limitType">{{item.name}}</option>
+        </select>
+        <div>
+            <label >访问量</label>
+            <input type="text" :disabled="isDisableVisit">
+        </div>
+    </div>
+    <div v-show="isShowPeriod">
+        <div>
+            <label >开始时间</label>
+            <input type="text">
+        </div>
+        <div>
+            <label >结束时间</label>
+            <input type="text">
+        </div>
+    </div>
+    <div>
+        <label >简介</label>
+        <textarea>
+
+        </textarea>
+    </div>
+    </div>
+</div>
+
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            limitObjList:[
+                {
+                    name:"全局限制",
+                    val:1
+                },
+                {
+                    name:"用户限制",
+                    val:2
+                }
+            ],
+            limitType:[
+                {
+                    name:"每时限制次数",
+                    val:1
+                },
+                {
+                    name:"每日限制次数",
+                    val:2
+                },
+                {
+                    name:"每日时间段",
+                    val:3
+                }
+            ],
+            isShowLimitUser:false,
+            isShowPeriod:false,
+            isDisableVisit:false
+        },
+
+    })
+</script>
+
+</body>
+</html>
