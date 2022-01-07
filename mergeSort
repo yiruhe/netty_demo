@@ -1,0 +1,65 @@
+package com.example.demo;
+
+import java.util.Arrays;
+
+//并归排序
+public class Sort {
+
+
+
+    public static void main(String[] args) {
+
+        int a[] = {80,30,60,40,20,10,50,70};
+
+
+        mergeSortUp2Down(a,0,a.length-1);
+
+        System.out.println( Arrays.toString(a));
+    }
+
+    private static void mergeSortUp2Down(int[] a, int start, int end) {
+
+        if(a==null || start >= end)
+            return ;
+
+        int mid  = (start+end) /2;
+
+        //左边分割
+        mergeSortUp2Down(a,start,mid);
+        //右分割
+        mergeSortUp2Down(a,mid+1,end);
+        //排序
+        merge(a,start,mid,end);
+
+    }
+
+    private static void merge(int[] a, int start, int mid, int end) {
+
+        int[] tmp = new int[end-start+1];    // tmp是汇总2个有序区的临时区域
+        int j = mid + 1;        // 第2个有序区的索引
+        int i = start;            // 第1个有序区的索引
+        int k = 0;                // 临时区域的索引
+
+        //两个指针，两个数组不停对比，吧小的排前面
+        while (i<=mid && j<=end){
+            if(a[i]<=a[j]){
+                     tmp[k++] = a[i++];
+            }else{
+                tmp[k++] = a[j++];
+            }
+        }
+
+        //吧剩余的数排在后面
+        for (int l = i; l < mid+1; l++) {
+            tmp[k++] = a[l];
+        }
+
+        while(j <= end)
+            tmp[k++] = a[j++];
+
+        for (int l = 0; l < tmp.length; l++) {
+            a[start+l] =tmp[l];
+        }
+
+    }
+}
